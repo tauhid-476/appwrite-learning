@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { CSSProperties, ReactElement, ReactNode, useEffect, useRef, useState } from "react";
+import { CSSProperties, ReactElement, ReactNode, useCallback, useEffect, useRef, useState } from "react";
 
 interface MousePosition {
     x: number;
@@ -31,7 +31,7 @@ function useMousePosition(): MousePosition {
 
 interface MagicContainerProps {
     children?: ReactNode;
-    className?: any;
+    className?: string;
 }
 
 const MagicContainer = ({ children, className }: MagicContainerProps) => {
@@ -43,8 +43,9 @@ const MagicContainer = ({ children, className }: MagicContainerProps) => {
 
     useEffect(() => {
         init();
-        containerRef.current &&
+        if (containerRef.current) {
             setBoxes(Array.from(containerRef.current.children).map(el => el as HTMLElement));
+        }
     }, []);
 
     useEffect(() => {
@@ -67,14 +68,14 @@ const MagicContainer = ({ children, className }: MagicContainerProps) => {
         }
     };
 
-    const onMouseMove = () => {
+    const onMouseMove = useCallback(() => {
         if (containerRef.current) {
             const rect = containerRef.current.getBoundingClientRect();
             const { w, h } = containerSize.current;
             const x = mousePosition.x - rect.left;
             const y = mousePosition.y - rect.top;
             const inside = x < w && x > 0 && y < h && y > 0;
-
+    
             mouse.current.x = x;
             mouse.current.y = y;
             boxes.forEach(box => {
@@ -82,15 +83,14 @@ const MagicContainer = ({ children, className }: MagicContainerProps) => {
                 const boxY = -(box.getBoundingClientRect().top - rect.top) + mouse.current.y;
                 box.style.setProperty("--mouse-x", `${boxX}px`);
                 box.style.setProperty("--mouse-y", `${boxY}px`);
-
-                if (inside) {
-                    box.style.setProperty("--opacity", `1`);
-                } else {
-                    box.style.setProperty("--opacity", `0`);
-                }
+    
+                box.style.setProperty("--opacity", inside ? `1` : `0`);
             });
         }
-    };
+    }, [boxes, mousePosition]); 
+    useEffect(() => {
+        onMouseMove();
+    }, [onMouseMove]); 
 
     return (
         <div className={cn("h-full w-full", className)} ref={containerRef}>
@@ -163,16 +163,14 @@ interface MagicCardProps {
      * */
     background?: string;
 
-    [key: string]: any;
+    [key: string]: unknown;
 }
 
 const MagicCard: React.FC<MagicCardProps> = ({
     className,
     children,
     size = 600,
-    spotlight = true,
     borderColor = "hsl(0 0% 98%)",
-    isolated = true,
     ...props
 }) => {
     return (
