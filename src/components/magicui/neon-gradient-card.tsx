@@ -1,6 +1,6 @@
 "use client";
 
-import {
+import React, {
   CSSProperties,
   ReactElement,
   ReactNode,
@@ -16,7 +16,7 @@ interface NeonColorsProps {
   secondColor: string;
 }
 
-interface NeonGradientCardProps {
+interface NeonGradientCardProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * @default <div />
    * @type ReactElement
@@ -58,13 +58,11 @@ interface NeonGradientCardProps {
 
   /**
    * @default "{ firstColor: '#ff00aa', secondColor: '#00FFF1' }"
-   * @type string
+   * @type NeonColorsProps
    * @description
    * The colors of the neon gradient
    * */
   neonColors?: NeonColorsProps;
-
-  [key: string]: any;
 }
 
 const NeonGradientCard: React.FC<NeonGradientCardProps> = ({
