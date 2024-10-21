@@ -13,7 +13,7 @@ export default async function getOrCreateDatabase(){
      await databases.get(db);
      console.log("database connection to appwrite");
      
-  } catch (error) {
+  } catch{
     try {
       await databases.create(db,db)
       console.log("database createed");

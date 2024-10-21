@@ -8,7 +8,7 @@ export default async function getOrCreateBucketStorage(){
   try {
     await storage.getBucket(questionAttachmentBucket);
     console.log("Storage connected to appwrite");
-  } catch (error) {
+  } catch {
     try {
       await storage.createBucket(
         questionAttachmentBucket,

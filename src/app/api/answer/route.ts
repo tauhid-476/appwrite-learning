@@ -58,14 +58,15 @@ export async function DELETE(request: NextRequest){
 
 
 
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as Error;
     return NextResponse.json(
-      {
-        message: error?.message || "Error deleting the answer"
-      },
-      {
-        status: error?.status || error?.code || 500
-      }
-    )
-  }
+        {
+            error: err.message,
+        },
+        {
+            status: 400,
+        },
+    );
+}
 }
