@@ -13,8 +13,7 @@ import { ID } from "node-appwrite";
 import { NextRequest, NextResponse } from "next/server";
 import { UserPrefs } from "@/store/auth";
 import { Query } from "appwrite";
-
-
+import {Error } from "@/types/Error"
 // ALGORITHM //
 /* 
 ***
@@ -43,8 +42,7 @@ Decrease by 1 for downvote
 
 */
 
-
-//Please see at the bottom of the code to see a sample response 
+//Please see at the bottom of the code to see a sample response
 export async function POST(req: NextRequest) {
   try {
     //get the data , list the docs
@@ -57,11 +55,11 @@ export async function POST(req: NextRequest) {
       Query.equal("typeId", typeId),
     ]);
 
-    console.log("response is",response);
+    console.log("response is", response);
 
     //***//
     //if vote exist
-    
+
     if (response.documents.length > 0) {
       console.log("user has already voted the post");
       await databases.deleteDocument(
@@ -110,7 +108,6 @@ export async function POST(req: NextRequest) {
         questionOrAnswerCollection.authorId
       );
 
-
       //For existing vote with changed status:
       if (response.documents[0]) {
         await users.updatePrefs<UserPrefs>(
@@ -122,7 +119,7 @@ export async function POST(req: NextRequest) {
                 : Number(authorPrefs.reputation) + 1,
           }
         );
-      } else { 
+      } else {
         //For new vote
         await users.updatePrefs<UserPrefs>(
           questionOrAnswerCollection.authorId,
@@ -195,18 +192,18 @@ export async function POST(req: NextRequest) {
         status: 201,
       }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as Error;
     return NextResponse.json(
       {
-        error: error?.message || "Something went wrong",
+        error: err.message,
       },
       {
-        status: error?.status || 500,
+        status: 400,
       }
     );
   }
 }
-
 
 /* 
 for first time

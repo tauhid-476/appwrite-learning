@@ -3,7 +3,7 @@ import { databases, users } from "@/models/server/config";
 import { NextRequest, NextResponse } from "next/server";
 import { ID } from "node-appwrite";
 import {UserPrefs} from "@/store/auth"
-
+import {Error} from "@/types/Error"
 export async function POST(request: NextRequest){
   try {
     const {questionId, answer, authorId} = await request.json();
@@ -24,16 +24,17 @@ export async function POST(request: NextRequest){
       status: 201
     })
 
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as Error;
     return NextResponse.json(
-      {
-        error: error?.message || "Error creating answer"
-      },
-      {
-        status: error?.status || error?.code || 500
-      }
-    )
-  }
+        {
+            error: err.message,
+        },
+        {
+            status: 400,
+        },
+    );
+}
 }
 
 export async function DELETE(request: NextRequest){

@@ -4,7 +4,6 @@ import QuestionForm from "@/components/QuestionForm";
 import { useAuthStore } from "@/store/auth";
 import { useRouter } from "next/navigation";
 import React from "react";
-import Meteors from "@/components/magicui/meteors";
 
 const AskQuestion = () => {
     const { user } = useAuthStore();

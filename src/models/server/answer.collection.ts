@@ -1,4 +1,4 @@
-import { IndexType, Permission } from "node-appwrite";
+import { Permission } from "node-appwrite";
 
 import { db, answerCollection } from "../name";
 import { databases } from "./config";

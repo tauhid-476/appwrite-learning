@@ -3,13 +3,13 @@
 "use client"
 import { cn } from "@/lib/utils";
 import { databases } from "@/models/client/config";
-import { answerCollection, db, questionCollection, voteCollection } from "@/models/name";
+import { db, voteCollection } from "@/models/name";
 import { useAuthStore } from "@/store/auth";
 import { IconCaretDownFilled, IconCaretUpFilled } from "@tabler/icons-react";
 import { Models, Query } from "appwrite";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
+import { Error } from "@/types/Error"
 
 
 const VoteButtons = (
@@ -41,19 +41,25 @@ const VoteButtons = (
 
   //when a user visits the page of voting functionality , the votes should be displayed correctly
   useEffect(() => {
-    async () => {
+    const fetchData = async () => {
       if (user) {
-
         const response = await databases.listDocuments(
-          db, voteCollection, [
-          Query.equal("votedById", user.$id),
-          Query.equal("type", type),
-          Query.equal("typeId", id)
-        ]);
+          db,
+          voteCollection,
+          [
+            Query.equal("votedById", user.$id),
+            Query.equal("type", type),
+            Query.equal("typeId", id)
+          ]
+        );
         setVotedDocument(response.documents[0] || null);
       }
-    }
-  }, [user, id, type])
+    };
+
+    fetchData(); // Invoke the function
+
+  }, [user, id, type]);
+
 
   //toggle upvote
 
@@ -82,8 +88,9 @@ const VoteButtons = (
       setVotesResult(data.data.voteResult);
       setVotedDocument(data.data.document);
 
-    } catch (error: any) {
-      window.alert(error?.message || "Something went wrong");
+    } catch (error: unknown) {
+      const err = error as Error;
+      window.alert(err?.message || "Error creating answer");
     }
   }
   //toggle downvote
@@ -111,8 +118,9 @@ const VoteButtons = (
       setVotesResult(data.data.voteResult);
       setVotedDocument(data.data.document);
 
-    } catch (error: any) {
-      window.alert(error?.message || "Something went wrong");
+    } catch (error: unknown) {
+      const err = error as Error;
+      window.alert(err?.message || "Error creating answer");
     }
   }
 

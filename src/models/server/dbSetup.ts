@@ -6,7 +6,6 @@ import createanswerCollection from "./answer.collection";
 import createcommentCollection from "./comment.collection";
 import createQuestionCollection from "./question.collection";
 import createvoteCollection from "./vote.collection";
-import { log } from "util";
 
 
 export default async function getOrCreateDatabase(){
@@ -15,7 +14,6 @@ export default async function getOrCreateDatabase(){
      console.log("database connection to appwrite");
      
   } catch (error) {
-
     try {
       await databases.create(db,db)
       console.log("database createed");
@@ -31,8 +29,9 @@ export default async function getOrCreateDatabase(){
       console.log("Collections created successfully");
       console.log("database connection to appwrite");
       
-    } catch (error) {
-      console.log("Error creating database", error);
+    } catch (error:unknown) {
+      const err = error as Error;
+      console.log("Error creating database", err.message);
     }    
   }
 

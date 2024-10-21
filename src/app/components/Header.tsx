@@ -1,14 +1,13 @@
 "use client";
 import React from "react";
 import { FloatingNav } from "@/components/ui/floating-navbar";
-import { IconHome, IconLogout, IconMessage, IconWorldQuestion } from "@tabler/icons-react";
+import { IconHome, IconMessage, IconWorldQuestion } from "@tabler/icons-react";
 
 import { useAuthStore } from "@/store/auth";
 import slugify from "@/utils/slugify";
 
 export default function Header() {
     const { user } = useAuthStore();
-    const { session, logout } = useAuthStore();
 
     const navItems = [
         {

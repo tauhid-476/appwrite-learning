@@ -10,6 +10,8 @@ import Comments from "./Comments";
 import slugify from "@/utils/slugify";
 import Link from "next/link";
 import { IconTrash } from "@tabler/icons-react";
+import {Error } from "@/types/Error"
+
 
 const Answers = ({
     answers: _answers,
@@ -54,8 +56,9 @@ const Answers = ({
                     ...prev.documents,
                 ],
             }));
-        } catch (error: any) {
-            window.alert(error?.message || "Error creating answer");
+        } catch (error: unknown) {
+            const err = error as Error;
+            window.alert(err?.message || "Error creating answer");
         }
     };
 
@@ -76,8 +79,9 @@ const Answers = ({
                 total: prev.total - 1,
                 documents: prev.documents.filter(answer => answer.$id !== answerId),
             }));
-        } catch (error: any) {
-            window.alert(error?.message || "Error deleting answer");
+        } catch (error: unknown) {
+            const err = error as Error;
+            window.alert(err?.message || "Error creating answer");
         }
     };
 

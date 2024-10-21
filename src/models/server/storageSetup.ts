@@ -1,6 +1,7 @@
 import { Permission } from "appwrite";
 import { storage } from "./config";
 import { questionAttachmentBucket } from "../name";
+import { Error } from "@/types/Error";
 
 
 export default async function getOrCreateBucketStorage(){
@@ -25,8 +26,9 @@ export default async function getOrCreateBucketStorage(){
         ["jpg","png","jpeg","gif","webp","heic"]
       )
       
-    } catch (error) {
-      console.log("Error creating storage", error);
-    }
+    } catch (error:unknown) {
+      const err = error as Error;
+      console.log("Error creating database", err.message);
+    }   
   }
 }

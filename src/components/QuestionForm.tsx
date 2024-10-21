@@ -8,13 +8,11 @@ import { databases, storage } from "@/models/client/config";
 import { db, questionAttachmentBucket, questionCollection } from "@/models/name";
 import { useRouter } from "next/navigation";
 import slugify from "@/utils/slugify";
-import Meteors from "./magicui/meteors";
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils";
 import { Input } from "./ui/input";
 import RTE from "./RTE";
 import { IconX } from "@tabler/icons-react";
-import { log } from "console";
 
 const LabelInputContainer = ({
   children,
@@ -178,8 +176,9 @@ const submit = async(e: React.FormEvent<HTMLFormElement>) => {
      const response = question ? await update() : await create();
      router.push(`/question/${response.$id}/${slugify(formData.title)}`);
 
-  } catch (error:any) {
-    setError(() => error.message);
+  } catch (error:unknown) {
+    const err = error as Error;
+    setError(() => err.message);
   }
 
   setLoading(()=> false)

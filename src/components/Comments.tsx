@@ -10,7 +10,7 @@ import { IconTrash } from "@tabler/icons-react"
 import { ID, Models } from "appwrite"
 import Link from "next/link"
 import React, { useState } from "react"
-
+import {Error } from "@/types/Error"
 //_ --> used as state and temporaray
 const Comments = ({
   comments: _comments,
@@ -54,9 +54,10 @@ const Comments = ({
         total: prev.total + 1,
         documents: [{ ...response, author: user }, ...prev.documents],
       }));
-    } catch (error: any) {
-      window.alert(error?.message || "Error creating comment");
-    }
+    } catch (error: unknown) {
+      const err = error as Error;
+      window.alert(err?.message || "Error creating answer");
+  }
   }
 
   const deleteComment = async (commentId: string) => {
@@ -71,9 +72,10 @@ const Comments = ({
         total: prev.total - 1,
         documents: prev.documents.filter(comment => comment.$id !== commentId),
       }))
-    } catch (error: any) {
-      window.alert(error?.message || "Error deleting comment");
-    }
+    } catch (error: unknown) {
+      const err = error as Error;
+      window.alert(err?.message || "Error creating answer");
+  }
   }
 
   return (
